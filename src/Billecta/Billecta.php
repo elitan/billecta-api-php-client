@@ -2,6 +2,7 @@
 
 namespace Billecta;
 
+// test comment
 class Billecta {
 
 	var $host;
