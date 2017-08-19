@@ -2,7 +2,6 @@
 
 namespace Billecta;
 
-// test comment
 class Billecta {
 
 	var $creditor_public_id;
