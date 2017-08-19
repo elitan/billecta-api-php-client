@@ -62,7 +62,11 @@ class Billecta {
 
 	// get all companies
 	public function getCreditors() {
-		$response = $this->http_client->get('creditors/creditors');
+
+		$url = 'creditors/creditors';
+
+		$response = $this->http_client->get($url);
+
 		return $this->returnResponseBody($response);
 	}
 
@@ -103,7 +107,9 @@ class Billecta {
 		$body = json_encode($debtor);
 
 		$url = 'debtors/debtor/';
+
 		$response = $this->http_client->post($url, ['body' => $body]);
+
 		return $this->returnResponseBody($response);
 	}
 
@@ -112,18 +118,21 @@ class Billecta {
 		$url = 'debtors/debtor/' . $debtor_public_id;
 
 		$response = $this->http_client->get($url);
+
 		return $this->returnResponseBody($response);
 	}
 
 	public function getDebtorExternalId($external_id) {
 
-		$url = 'debtors/debtor/' . $this->creditor_public_id;
 
 		$query = array(
 			'externalid' => $external_id
 		);
 
+		$url = 'debtors/debtor/' . $this->creditor_public_id;
+
 		$response = $this->http_client->get($url, ['query' => $query]);
+
 		return $this->returnResponseBody($response);
 	}
 }
