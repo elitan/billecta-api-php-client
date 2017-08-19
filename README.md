@@ -39,3 +39,28 @@ $customer = $billecta->addDebtor($debtor);
 
 var_dump($customer);
 ```
+
+# Functions
+
+```
+
+// CREDITORS aka COMPANIES
+$billecta->getCreditors();
+
+// MiSC
+$billecta->setCreditorPublicId($creditor_public_id);
+
+// DEBTORS aka CUSTOMERS
+$billecta->addDebtor($debtor);
+
+$billecta->getDebtor($debtor_public_id);
+
+$billecta->getAllDebtors();
+
+$billecta->deleteDebtor($debtor_public_id);
+
+$billecta->updateDebtor($debtor);
+
+$billecta->getDebtorByExternalId($external_id);
+
+```
