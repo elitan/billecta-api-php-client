@@ -129,7 +129,7 @@ class Billecta {
 			'externalid' => $external_id
 		);
 
-		$url = 'debtors/debtor/' . $this->creditor_public_id;
+		$url = 'debtors/debtorbyexternalid/' . $this->creditor_public_id;
 
 		$response = $this->http_client->get($url, ['query' => $query]);
 
