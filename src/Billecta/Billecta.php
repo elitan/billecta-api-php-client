@@ -55,37 +55,54 @@ class Billecta {
 		return json_decode((string)$response->getBody());
 	}
 
+	// set what company you are working with
 	public function setCreditorPublicId($creditor_public_id) {
 		$this->creditor_public_id = $creditor_public_id;
 	}
 
-	// companies
+	// get all companies
 	public function getCreditors() {
 		$response = $this->http_client->get('creditors/creditors');
 		return $this->returnResponseBody($response);
 	}
 
-	// customers
+	// add customers
 	public function addDebtor($debtor) {
 
 		if (!$this->creditor_public_id) {
 			throw new Exception('No debtor is selected. Use setCreditor() function first', 1);
 		}
 
-		if (!array_key_exists('Name', $debtor)) {
-			throw new Exception('Name property is required on $debtor object', 1);
+		$required_keys = Array(
+			'Name',
+			'DebtorPublicId',
+			'CreditorPublicId',
+			'Created',
+		);
 
+		// add default values for DebtorPublicId, CreditorPublicId and Created
+		if (!array_key_exists('DebtorPublicId', $debtor)) {
+			$debtor['DebtorPublicId'] = $this->GUID();
+		}
+		if (!array_key_exists('CreditorPublicId', $debtor)) {
+			$debtor['CreditorPublicId'] = $this->creditor_public_id;
+		}
+		if (!array_key_exists('Created', $debtor)) {
+			$debtor['Created'] = $this->getCurrentDate();
 		}
 
-		$url = 'debtors/debtor/';
 
+		// make sure all required key exists
+		foreach ($required_keys as $required_key) {
+			if (!array_key_exists($required_key, $debtor)) {
+				throw new Exception('Debtor must contain property: \'' . $required_key . '\'', 1);
+			}
+		}
 
-		$debtor['DebtorPublicId'] = $this->GUID();
-		$debtor['CreditorPublicId'] = $this->creditor_public_id;
-		$debtor['Created'] = $this->getCurrentDate();
-
+		// encode to json
 		$body = json_encode($debtor);
 
+		$url = 'debtors/debtor/';
 		$response = $this->http_client->post($url, ['body' => $body]);
 		return $this->returnResponseBody($response);
 	}
