@@ -2,14 +2,14 @@
 A PHP client library for accessing Billecta API.
 
 Link to the Billecta API
-(https://app.billecta.com/docs/v1/index)[https://app.billecta.com/docs/v1/index]
+[https://app.billecta.com/docs/v1/index](https://app.billecta.com/docs/v1/index)
 
 # Install
 
 `composer install elita/billecta-api-php-client`
 
 Next, you need a api secret (SecureToken). This is a bit of a hassle. Read more here under SecureToken:
-(https://app.billecta.com/docs/v1/StartAPI#authentication)[https://app.billecta.com/docs/v1/StartAPI#authentication]
+[https://app.billecta.com/docs/v1/StartAPI#authentication](https://app.billecta.com/docs/v1/StartAPI#authentication)
 
 # Example
 
