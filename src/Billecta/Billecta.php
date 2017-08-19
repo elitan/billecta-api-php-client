@@ -79,13 +79,6 @@ class Billecta {
 			throw new Exception('No debtor is selected. Use setCreditor() function first', 1);
 		}
 
-		$required_keys = Array(
-			'Name',
-			'DebtorPublicId',
-			'CreditorPublicId',
-			'Created',
-		);
-
 		// add default values for DebtorPublicId, CreditorPublicId and Created
 		if (!array_key_exists('DebtorPublicId', $debtor)) {
 			$debtor['DebtorPublicId'] = $this->GUID();
@@ -97,8 +90,14 @@ class Billecta {
 			$debtor['Created'] = $this->getCurrentDate();
 		}
 
-
 		// make sure all required key exists
+		$required_keys = Array(
+			'Name',
+			'DebtorPublicId',
+			'CreditorPublicId',
+			'Created',
+		);
+
 		foreach ($required_keys as $required_key) {
 			if (!array_key_exists($required_key, $debtor)) {
 				throw new Exception('Debtor must contain property: \'' . $required_key . '\'', 1);
