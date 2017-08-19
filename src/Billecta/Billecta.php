@@ -8,6 +8,7 @@ class Billecta {
 	var $http_client;
 
 	function __construct($host, $secure_token, $format = 'json', $version = 1) {
+
 		// add version to host var
 		$host = $host . '/v' . $version . '/';
 
@@ -38,14 +39,15 @@ class Billecta {
 	}
 
 	private function GUID() {
-		if (function_exists('com_create_guid') === true)
-		{
+
+		if (function_exists('com_create_guid') === true) {
 			return trim(com_create_guid(), '{}');
 		}
 
 		return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
-		}
+	}
 
+	// generate current date in the format Billecta likes it
 	private function getCurrentDate() {
 		return date('Y-m-d H:i:sO');
 	}
@@ -123,7 +125,6 @@ class Billecta {
 	}
 
 	public function getDebtorExternalId($external_id) {
-
 
 		$query = array(
 			'externalid' => $external_id
