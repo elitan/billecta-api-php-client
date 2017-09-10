@@ -6,7 +6,7 @@ Link to the Billecta API
 
 # Install
 
-`composer require elita/billecta-api-php-client`
+`composer require elitan/billecta-api-php-client`
 
 Next, you need a api secret (SecureToken). This is a bit of a hassle. Read more here under SecureToken:
 [https://app.billecta.com/docs/v1/StartAPI#authentication](https://app.billecta.com/docs/v1/StartAPI#authentication)
