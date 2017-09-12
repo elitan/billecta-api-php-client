@@ -33,7 +33,8 @@ class Billecta {
 		$this->http_client = new \GuzzleHttp\Client(
 			[
 				'base_uri' => $host,
-				'headers' => $default_headers
+				'headers' => $default_headers,
+				'http_errors' => false
 			]
 		);
 	}
@@ -43,7 +44,7 @@ class Billecta {
 	 * private
 	 */
 
-	private function GUID() {
+	public function getGUID() {
 
 		if (function_exists('com_create_guid') === true) {
 			return trim(com_create_guid(), '{}');
@@ -91,38 +92,13 @@ class Billecta {
 	 * DEBTORS aka CUSTOMERS
 	 */
 
-	public function addDebtor($debtor) {
+	public function createDebtor($debtor) {
 
-		if (!$this->creditor_public_id) {
-			throw new Exception('No debtor is selected. Use setCreditor() function first', 1);
-		}
-
-		// add default values for DebtorPublicId, CreditorPublicId and Created
-		if (!array_key_exists('DebtorPublicId', $debtor)) {
-			$debtor['DebtorPublicId'] = $this->GUID();
-		}
 		if (!array_key_exists('CreditorPublicId', $debtor)) {
 			$debtor['CreditorPublicId'] = $this->creditor_public_id;
 		}
-		if (!array_key_exists('Created', $debtor)) {
-			$debtor['Created'] = $this->getCurrentDate();
-		}
 
-		// make sure all required key exists
-		$required_keys = Array(
-			'Name',
-			'DebtorPublicId',
-			'CreditorPublicId',
-			'Created',
-		);
-
-		foreach ($required_keys as $required_key) {
-			if (!array_key_exists($required_key, $debtor)) {
-				throw new Exception('Debtor must contain property: \'' . $required_key . '\'', 1);
-			}
-		}
-
-		// do not add two debtors with the same external_id
+		// do not create two debtors with the same external_id
 		if (array_key_exists('DebtorExternalId', $debtor)) {
 			$external_id = $debtor['DebtorExternalId'];
 			$debtor_tmp = $this->getDebtorByExternalId($external_id);
@@ -139,6 +115,12 @@ class Billecta {
 		$response = $this->http_client->post($url, ['body' => $body]);
 
 		return $this->returnResponseBody($response);
+	}
+
+	public function createDebtors($debtors) {
+		foreach ($debtors as $debtor) {
+			$this->createDebtor($debtor);
+		}
 	}
 
 	public function getDebtor($debtor_public_id) {
@@ -168,9 +150,9 @@ class Billecta {
 
 	public function updateDebtor($debtor) {
 
-		$body = json_encode($debtor);
-
 		$url = 'debtors/debtor/';
+
+		$body = json_encode($debtor);
 
 		$response = $this->http_client->put($url, ['body' => $body]);
 
@@ -194,6 +176,111 @@ class Billecta {
 		if ($response->getStatusCode() == 400) {
 			return NULL;
 		}
+
+		return $this->returnResponseBody($response);
+	}
+
+	public function getDebtorEvents($debtor_public_id) {
+
+		$url = 'debtors/debtorevents/' . $debtor_public_id;
+
+		$response = $this->http_client->get($url);
+
+		return $this->returnResponseBody($response);
+	}
+
+	/**
+	 * Functions for
+	 * PRODUCTS
+	 */
+
+	public function createProduct($product) {
+
+		if (!array_key_exists('CreditorPublicId', $product)) {
+			$product['CreditorPublicId'] = $this->creditor_public_id;
+		}
+
+		$url = 'products/product/';
+
+		// encode debtor to json and create
+		$body = json_encode($product);
+
+		$response = $this->http_client->post($url, ['body' => $body]);
+
+		return $this->returnResponseBody($response);
+	}
+
+	public function createProducts($products) {
+		foreach ($products as $product) {
+			$this->createProduct($product);
+		}
+	}
+
+	public function deleteProduct($product_public_id) {
+
+		$url = 'products/product/' . $product_public_id;
+
+		$response = $this->http_client->delete($url);
+	}
+
+	public function getProduct($product_public_id) {
+
+		$query = array(
+			'productid' => $product_public_id
+		);
+
+		$url = 'products/product/' . $this->creditor_public_id;
+
+		$response = $this->http_client->get($url, [
+			'query' => $query,
+		]);
+
+		return $this->returnResponseBody($response);
+	}
+
+	public function getAllProducts() {
+
+		$url = 'products/products/' . $this->creditor_public_id;
+
+		$response = $this->http_client->get($url);
+
+		return $this->returnResponseBody($response);
+
+	}
+
+	public function getProductByExternalId($external_id) {
+
+		$query = array(
+			'externalid' => $external_id
+		);
+
+		$url = 'products/productbyexternalid/' . $this->creditor_public_id;
+
+		$response = $this->http_client->get($url, [
+			'query' => $query,
+			'http_error' => false
+		]);
+
+		// if multiple debtors with same DebtorExternalId
+		if ($response->getStatusCode() == 400) {
+			return NULL;
+		}
+
+		return $this->returnResponseBody($response);
+
+	}
+
+	public function updateProduct($product) {
+
+		if (!array_key_exists('CreditorPublicId', $product)) {
+			$product['CreditorPublicId'] = $this->creditor_public_id;
+		}
+
+		$url = 'products/product/';
+
+		$body = json_encode($product);
+
+		$response = $this->http_client->put($url, ['body' => $body]);
 
 		return $this->returnResponseBody($response);
 	}

@@ -31,11 +31,11 @@ var_dump($companies);
 // set what company we are working with
 $billecta->setCreditorPublicId('creditor_public_id');
 
-// add debtor (customer)
+// create debtor (customer)
 $debtor = Array(
 	'Name' => 'Joe Doe'
 );
-$customer = $billecta->addDebtor($debtor);
+$customer = $billecta->createDebtor($debtor);
 
 var_dump($customer);
 ```
@@ -51,7 +51,9 @@ $billecta->getCreditors();
 $billecta->setCreditorPublicId($creditor_public_id);
 
 // DEBTORS aka CUSTOMERS
-$billecta->addDebtor($debtor);
+$billecta->createDebtor($debtor);
+
+$billecta->createDebtors($debtors);
 
 $billecta->getDebtor($debtor_public_id);
 
@@ -62,5 +64,7 @@ $billecta->deleteDebtor($debtor_public_id);
 $billecta->updateDebtor($debtor);
 
 $billecta->getDebtorByExternalId($external_id);
+
+$billecta->getDebtorEvents($debtor_public_id);
 
 ```
