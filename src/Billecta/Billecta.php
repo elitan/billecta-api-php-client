@@ -284,6 +284,26 @@ class Billecta {
 
 		return $this->returnResponseBody($response);
 	}
+
+
+	/**
+	 * Functions for
+	 * invoices
+	 */
+
+	public function getInvoicesByDebtor($debtor_public_id) {
+
+		$url = 'invoice/openbydebtor/' . $debtor_public_id;
+
+		$body = json_encode($debtor);
+
+		$response = $this->http_client->put($url, ['body' => $body]);
+
+		return $this->returnResponseBody($response);
+
+	}
+
+
 }
 
 class Exception extends \Exception {}
