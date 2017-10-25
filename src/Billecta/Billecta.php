@@ -295,9 +295,7 @@ class Billecta {
 
 		$url = 'invoice/openbydebtor/' . $debtor_public_id;
 
-		$body = json_encode($debtor);
-
-		$response = $this->http_client->put($url, ['body' => $body]);
+		$response = $this->http_client->get($url);
 
 		return $this->returnResponseBody($response);
 
