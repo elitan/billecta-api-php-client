@@ -291,7 +291,42 @@ class Billecta {
 	 * invoices
 	 */
 
-	public function getInvoicesByDebtor($debtor_public_id) {
+	public function getInvoice($invoice_public_id) {
+
+		$url = 'invoice/action/' . $invoice_public_id;
+		var_dump($url);
+
+		$response = $this->http_client->get($url);
+
+		return $this->returnResponseBody($response);
+	}
+
+	public function getOpenInvoices() {
+
+		$url = 'invoice/open/' . $this->creditor_public_id;
+
+		$response = $this->http_client->get($url);
+
+		return $this->returnResponseBody($response);
+	}
+
+	public function getClosedInvoices($from_date = '', $to_date = '') {
+
+		$query = array(
+			'from' => $from_date,
+			'to' => $to_date
+		);
+
+		$url = 'invoice/closed/' . $this->creditor_public_id;
+
+		$response = $this->http_client->get($url, [
+			'query' => $query
+		]);
+
+		return $this->returnResponseBody($response);
+	}
+
+	public function getOpenInvoicesByDebtor($debtor_public_id) {
 
 		$url = 'invoice/openbydebtor/' . $debtor_public_id;
 
@@ -301,6 +336,22 @@ class Billecta {
 
 	}
 
+	public function getClosedInvoicesByDebtor($debtor_public_id, $from_date, $to_date) {
+
+		$query = array(
+			'from' => $from_date,
+			'to' => $to_date
+		);
+
+		$url = 'invoice/closedbydebtor/' . $debtor_public_id;
+
+		$response = $this->http_client->get($url, [
+			'query' => $query
+		]);
+
+		return $this->returnResponseBody($response);
+
+	}
 
 }
 
