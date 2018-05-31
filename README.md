@@ -44,11 +44,12 @@ var_dump($customer);
 
 ```
 
-// CREDITORS aka COMPANIES
-$billecta->getCreditors();
 
 // MiSC
 $billecta->setCreditorPublicId($creditor_public_id);
+
+// CREDITORS aka COMPANIES
+$billecta->getCreditors();
 
 // DEBTORS aka CUSTOMERS
 $billecta->createDebtor($debtor);
@@ -66,5 +67,39 @@ $billecta->updateDebtor($debtor);
 $billecta->getDebtorByExternalId($external_id);
 
 $billecta->getDebtorEvents($debtor_public_id);
+
+
+// PRODUCTS
+
+$billecta->createProduct($product);
+
+$billecta->updateProduct($product);
+
+$billecta->deleteProduct($product_public_id);
+
+$billecta->getProduct($product_public_id);
+
+$billecta->getAllProducts();
+
+$billecta->getProductByExternalId($external_id);
+
+
+// INVOICES
+
+$billecta->createInvoice($invoice);
+
+$billecta->updateInvoice($invoice, $invoice_public_id);
+
+$billecta->getInvoice($invoice_public_id);
+
+// Retreives all drafts/attested and unpaid invoices.
+$billecta->getOpenInvoices();
+
+// Retreives all invoices that have a closed/full payment date between the specified from and to dates.
+$billecta->getClosedInvoices($from_date, $to_date);
+
+$billecta->getOpenInvoicesByDebtor($debtor_public_id);
+
+$billecta->getClosedInvoicesByDebtor($debtor_public_id, $from_date, $to_date);
 
 ```

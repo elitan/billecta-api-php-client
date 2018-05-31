@@ -39,25 +39,6 @@ class Billecta {
 		);
 	}
 
-	/**
-	 * Functions for
-	 * private
-	 */
-
-	public function getGUID() {
-
-		if (function_exists('com_create_guid') === true) {
-			return trim(com_create_guid(), '{}');
-		}
-
-		return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
-	}
-
-	// generate current date in the format Billecta likes it
-	private function getCurrentDate() {
-		return date('Y-m-d H:i:sO');
-	}
-
 	// convert to string and create php object from the json response
 	private function returnResponseBody($response) {
 		return json_decode((string)$response->getBody());
@@ -67,6 +48,15 @@ class Billecta {
 	 * Functions for
 	 * MiSC
 	 */
+
+	// generate current date in the format Billecta likes it
+	public function getCurrentDate() {
+		return date('Y-m-d H:i:sO');
+	}
+
+	public function getDate($time) {
+		return date('Y-m-d H:i:sO', $time);
+	}
 
 	// set what company you are working with
 	public function setCreditorPublicId($creditor_public_id) {
@@ -112,15 +102,11 @@ class Billecta {
 
 		$url = 'debtors/debtor/';
 
-		$response = $this->http_client->post($url, ['body' => $body]);
+		$response = $this->http_client->post($url, [
+			'body' => $body,
+		]);
 
 		return $this->returnResponseBody($response);
-	}
-
-	public function createDebtors($debtors) {
-		foreach ($debtors as $debtor) {
-			$this->createDebtor($debtor);
-		}
 	}
 
 	public function getDebtor($debtor_public_id) {
@@ -154,7 +140,9 @@ class Billecta {
 
 		$body = json_encode($debtor);
 
-		$response = $this->http_client->put($url, ['body' => $body]);
+		$response = $this->http_client->put($url, [
+			'body' => $body,
+		]);
 
 		return $this->returnResponseBody($response);
 	}
@@ -205,15 +193,29 @@ class Billecta {
 		// encode debtor to json and create
 		$body = json_encode($product);
 
-		$response = $this->http_client->post($url, ['body' => $body]);
+		$response = $this->http_client->post($url, [
+			'body' => $body,
+		]);
 
 		return $this->returnResponseBody($response);
 	}
 
-	public function createProducts($products) {
-		foreach ($products as $product) {
-			$this->createProduct($product);
+	public function updateProduct($product) {
+		// must contain ProductPublicId
+		if (!array_key_exists('ProductPublicId', $product)) {
+			throw new \Exception("Error \$product must contain 'ProductPublicId' key", 1);
 		}
+
+		$url = 'products/product/';
+
+		// encode debtor to json and create
+		$body = json_encode($product);
+
+		$response = $this->http_client->put($url, [
+			'body' => $body,
+		]);
+
+		return $this->returnResponseBody($response);
 	}
 
 	public function deleteProduct($product_public_id) {
@@ -270,31 +272,46 @@ class Billecta {
 
 	}
 
-	public function updateProduct($product) {
-
-		if (!array_key_exists('CreditorPublicId', $product)) {
-			$product['CreditorPublicId'] = $this->creditor_public_id;
-		}
-
-		$url = 'products/product/';
-
-		$body = json_encode($product);
-
-		$response = $this->http_client->put($url, ['body' => $body]);
-
-		return $this->returnResponseBody($response);
-	}
-
-
 	/**
 	 * Functions for
 	 * invoices
 	 */
 
+	public function createInvoice($invoice) {
+
+		if (!array_key_exists('CreditorPublicId', $invoice)) {
+			$invoice['CreditorPublicId'] = $this->creditor_public_id;
+		}
+
+		$url = 'invoice/action/';
+
+		$body = json_encode($invoice);
+
+		$response = $this->http_client->post($url, [
+			'body' => $body,
+		]);
+
+		return $this->returnResponseBody($response);
+	}
+
+	public function updateInvoice($invoice, $invoice_public_id) {
+
+		$url = 'invoice/action/' . $invoice_public_id;
+
+		// encode debtor to json and create
+		$body = json_encode($invoice);
+
+		$response = $this->http_client->put($url, [
+			'body' => $body,
+		]);
+
+		return $this->returnResponseBody($response);
+
+	}
+
 	public function getInvoice($invoice_public_id) {
 
 		$url = 'invoice/action/' . $invoice_public_id;
-		var_dump($url);
 
 		$response = $this->http_client->get($url);
 
