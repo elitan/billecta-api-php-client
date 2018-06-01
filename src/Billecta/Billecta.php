@@ -206,6 +206,10 @@ class Billecta {
 			throw new \Exception("Error \$product must contain 'ProductPublicId' key", 1);
 		}
 
+		if (!array_key_exists('CreditorPublicId', $product)) {
+			$product['CreditorPublicId'] = $this->creditor_public_id;
+		}
+
 		$url = 'products/product/';
 
 		// encode debtor to json and create
