@@ -136,6 +136,14 @@ class Billecta {
 
 	public function updateDebtor($debtor) {
 
+		if (!array_key_exists('DebtorPublicId', $debtor)) {
+			throw new \Exception("Error \$product must contain 'DebtorPublicId' key", 1);
+		}
+
+		if (!array_key_exists('CreditorPublicId', $debtor)) {
+			$debtor['CreditorPublicId'] = $this->creditor_public_id;
+		}
+
 		$url = 'debtors/debtor/';
 
 		$body = json_encode($debtor);
@@ -146,6 +154,7 @@ class Billecta {
 
 		return $this->returnResponseBody($response);
 	}
+
 
 	public function getDebtorByExternalId($external_id) {
 
