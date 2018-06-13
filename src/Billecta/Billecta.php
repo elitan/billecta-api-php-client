@@ -34,7 +34,6 @@ class Billecta {
 			[
 				'base_uri' => $host,
 				'headers' => $default_headers,
-				'http_errors' => false
 			]
 		);
 	}
