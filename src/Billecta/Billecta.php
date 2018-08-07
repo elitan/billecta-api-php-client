@@ -19,7 +19,7 @@ class Billecta {
 		if ($format == 'json') {
 			$accept_format = 'application/json';
 		} else {
-			throw new Exception('JSON is the only supported format. For good reasons.');
+			throw new Exception('JSON is the only supported format.');
 		}
 
 		// default headers used in every request
