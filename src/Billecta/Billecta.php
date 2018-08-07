@@ -19,7 +19,6 @@ class Billecta {
 		if ($format == 'json') {
 			$accept_format = 'application/json';
 		} else {
-			// oh don't feel intimidated.
 			throw new Exception('JSON is the only supported format. For good reasons.');
 		}
 
