@@ -305,6 +305,15 @@ class Billecta {
 		return $this->returnResponseBody($response);
 	}
 
+	public function attestInvoice($invoice_public_id)
+	{
+		$url = 'invoice/attest/' . $invoice_public_id;
+
+		$response = $this->http_client->put($url);
+
+		return $this->returnResponseBody($response);
+	}
+
 	public function updateInvoice($invoice, $invoice_public_id) {
 
 		$url = 'invoice/action/' . $invoice_public_id;
